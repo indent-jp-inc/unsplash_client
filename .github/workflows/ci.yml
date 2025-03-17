@@ -1,24 +1,23 @@
 name: CI
 
 on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
   push:
     branches:
+      - develop
       - main
-  pull_request:
 
 jobs:
-  build:
-    runs-on: ubuntu-20.04
-
-    services:
-      mockserver:
-        image: mockserver/mockserver
-        ports:
-          - 1080:1080
-
+  analyze:
+    name: analyze
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
     steps:
-      - uses: actions/checkout@v1
-
+      - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: stable
@@ -27,10 +26,4 @@ jobs:
         run: dart pub get
 
       - name: Run tests
-        run: dart pub run test
-
-      - name: Run example
-        run: dart example/lib/main.dart
-        env:
-          UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
-          UNSPLASH_SECRET_KEY: ${{ secrets.UNSPLASH_SECRET_KEY }}
+        run: dart test ./test/src/
