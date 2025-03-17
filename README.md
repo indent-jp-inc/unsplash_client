@@ -20,6 +20,22 @@ and more.
 
 ---
 
+# GitHub Actions
+
+This repository contains a GitHub Actions workflow for automatically creating
+releases when a pull request is merged.
+
+## How to update the version and create a release
+
+1. Create a new branch
+2. Update the version in the `pubspec.yaml` file
+3. Commit and push your changes
+4. Create a pull request to main
+5. Merge the pull request
+
+When the pull request is merged, the GitHub Actions workflow will create a new
+release if the tag does not already exist.
+
 # Limitations
 
 Endpoints that act on behalf of a user are not implemented, yet.If that is
