@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Get version from pubspec.yaml
+        id: get_version
+        run: |
+          VERSION=$(grep 'version:' pubspec.yaml | sed 's/version: //' | tr -d '[:space:]')
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "Version found in pubspec.yaml: $VERSION"
+
+      - name: Check if tag exists
+        id: check_tag
+        run: |
+          TAG_NAME="v${{ steps.get_version.outputs.VERSION }}"
+          if git tag -l "$TAG_NAME" | grep -q "$TAG_NAME"; then
+            echo "Error: Tag $TAG_NAME already exists"
+            echo "TAG_EXISTS=true" >> $GITHUB_OUTPUT
+            exit 1
+          else
+            echo "Tag $TAG_NAME does not exist yet"
+            echo "TAG_EXISTS=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Release
+        id: release
+        if: steps.check_tag.outputs.TAG_EXISTS == 'false'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.get_version.outputs.VERSION }}
+          release_name: v${{ steps.get_version.outputs.VERSION }}
+          body: ${{ github.event.pull_request.body }}
+          draft: false
+          prerelease: false
