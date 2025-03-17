@@ -202,37 +202,37 @@ class UserLinks extends ModelBase {
     required this.following,
   }) : super(source: source);
 
-  final Uri self;
-  final Uri html;
-  final Uri photos;
-  final Uri likes;
-  final Uri portfolio;
-  final Uri followers;
-  final Uri following;
+  final Uri? self;
+  final Uri? html;
+  final Uri? photos;
+  final Uri? likes;
+  final Uri? portfolio;
+  final Uri? followers;
+  final Uri? following;
 
   @override
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
-      'self': self.toString(),
-      'html': html.toString(),
-      'photos': photos.toString(),
-      'likes': likes.toString(),
-      'portfolio': portfolio.toString(),
-      'followers': followers.toString(),
-      'following': following.toString(),
+      'self': self?.toString(),
+      'html': html?.toString(),
+      'photos': photos?.toString(),
+      'likes': likes?.toString(),
+      'portfolio': portfolio?.toString(),
+      'followers': followers?.toString(),
+      'following': following?.toString(),
     };
   }
 
   factory UserLinks.fromJson(Map<String, dynamic> json) {
     return UserLinks(
       source: json,
-      self: (json['self'] as String).let(Uri.parse),
-      html: (json['html'] as String).let(Uri.parse),
-      photos: (json['photos'] as String).let(Uri.parse),
-      likes: (json['likes'] as String).let(Uri.parse),
-      portfolio: (json['portfolio'] as String).let(Uri.parse),
-      followers: (json['followers'] as String).let(Uri.parse),
-      following: (json['following'] as String).let(Uri.parse),
+      self: (json['self'] as String?).let((it) => it?.let(Uri.parse)),
+      html: (json['html'] as String?).let((it) => it?.let(Uri.parse)),
+      photos: (json['photos'] as String?).let((it) => it?.let(Uri.parse)),
+      likes: (json['likes'] as String?).let((it) => it?.let(Uri.parse)),
+      portfolio: (json['portfolio'] as String?).let((it) => it?.let(Uri.parse)),
+      followers: (json['followers'] as String?).let((it) => it?.let(Uri.parse)),
+      following: (json['following'] as String?).let((it) => it?.let(Uri.parse)),
     );
   }
 }
